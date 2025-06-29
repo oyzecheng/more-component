@@ -1,6 +1,6 @@
 import type { FormItemBaseType } from '@/components/HiForm/types/common.ts'
 
-export type FormInputType = {
+export interface FormInputType extends FormItemBaseType{
   allowClear?: boolean
   placeholder?: string
   maxLength?: number | { length: number, errorOnly?: boolean }
@@ -8,4 +8,4 @@ export type FormInputType = {
   inputAttrs?: object
   prepend?: string
   append?: string
-} & FormItemBaseType
+}
