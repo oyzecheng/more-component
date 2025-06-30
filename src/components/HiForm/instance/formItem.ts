@@ -7,7 +7,10 @@ class HiFormItemConfig {
     this.formConfigItem = formConfigItem
   }
 
-  changeConfig(key: typeof HiFormItemConfig, value: string) {
+  changeConfig<K extends keyof HiFormConfigItemType>(key: K, value: HiFormConfigItemType[K]) {
+    if (['type', 'model'].includes(key)) {
+      throw new Error(`${key} is readonly, can't be changed`)
+    }
     this.formConfigItem[key] = value
   }
 }

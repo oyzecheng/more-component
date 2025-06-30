@@ -6,5 +6,7 @@ export interface FormItemBaseType {
   type: FormType
   size?: 'mini' | 'small' | 'medium' | 'large',
   disabled?: boolean
+  defaultValue?: any
+  onChange?: (value: any, event: any) => void
 }
 
