@@ -39,15 +39,16 @@ const handleCancel = () => {
 
 <template>
 	<a-form :model="formData" :rules="formRules" ref="form-ref">
-		<a-form-item
-			v-for="item in formConfigList"
-			:key="item.model"
-			:label="item.label"
-			:field="item.model"
-			:validate-trigger="item.validateTrigger"
-		>
-			<RenderFormItem :formItemConfig="item" />
-		</a-form-item>
+		<template v-for="item in formConfigList" :key="item.model">
+			<a-form-item
+				:label="item.label"
+				:field="item.model"
+				:validate-trigger="item.validateTrigger"
+				v-if="typeof item.show === 'function' ? item.show(formData) : typeof item.show === 'boolean' ? item.show : true"
+			>
+				<RenderFormItem :formItemConfig="item" />
+			</a-form-item>
+		</template>
 		<a-form-item>
 			<a-space :size="16">
 				<a-button type="primary" @click="handleSubmit">提交</a-button>

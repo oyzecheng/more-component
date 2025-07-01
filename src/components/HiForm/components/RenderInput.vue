@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { Input, InputPassword, InputSearch, InputNumber } from '@arco-design/web-vue'
+import {
+	Input,
+	InputPassword,
+	InputSearch,
+	InputNumber,
+	Textarea,
+	InputTag
+} from '@arco-design/web-vue'
 import { defineProps, inject, computed } from 'vue'
 
 const props = defineProps({
@@ -22,6 +29,10 @@ const renderComponent = computed(() => {
       return InputSearch
     case 'inputNumber':
       return InputNumber
+    case 'inputTextarea':
+      return Textarea
+    case 'inputTag':
+      return InputTag
   }
 })
 </script>
@@ -45,5 +56,10 @@ const renderComponent = computed(() => {
 		:loading="formItemConfig.loading"
 		:button-text="formItemConfig.buttonText"
 		:button-props="formItemConfig.buttonProps"
+		:auto-size="formItemConfig.autoSize"
+		:textarea-attrs="formItemConfig.textareaAttrs"
+		:max-tag-count="formItemConfig.maxTagCount"
+		:unique-value="formItemConfig.uniqueValue"
+		@change="formItemConfig.onChange"
 	/>
 </template>

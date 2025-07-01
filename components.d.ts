@@ -11,6 +11,7 @@ declare module 'vue' {
     HiForm: typeof import('./src/components/HiForm/index.vue')['default']
     RenderFormItem: typeof import('./src/components/HiForm/components/RenderFormItem.vue')['default']
     RenderInput: typeof import('./src/components/HiForm/components/RenderInput.vue')['default']
+    RenderSelect: typeof import('./src/components/HiForm/components/RenderSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RenderInput from './RenderInput.vue'
+import RenderSelect from './RenderSelect.vue'
 import { defineProps, computed } from 'vue'
 
 const props = defineProps({
@@ -11,10 +12,14 @@ const props = defineProps({
 const { formItemConfig } = props
 
 const renderComponent = computed(() => {
-  const inputList = ['input', 'inputPassword', 'inputSearch', 'inputNumber']
+  const inputList = ['input', 'inputPassword', 'inputSearch', 'inputNumber', 'inputTextarea', 'inputTag']
   if (inputList.includes(formItemConfig.type)) {
     return RenderInput
   }
+	const selectList = ['select', 'radio', 'checkbox']
+	if (selectList.includes(formItemConfig.type)) {
+		return RenderSelect
+	}
   return null
 })
 

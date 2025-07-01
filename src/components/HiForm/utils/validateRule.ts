@@ -1,7 +1,7 @@
 import type { HiFormConfigItemType } from "../types/form"
 
 export const getValidateTrigger = (type: HiFormConfigItemType['type']): HiFormConfigItemType['validateTrigger'] => {
-	if (['inputNumber'].includes(type)) {
+	if (['inputNumber', 'select'].includes(type)) {
 		return ['change', 'blur']
 	}
   return ['blur']

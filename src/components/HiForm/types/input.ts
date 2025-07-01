@@ -39,3 +39,22 @@ export interface FormInputNumberType extends FormItemBaseType {
   readOnly?: boolean
   inputAttrs?: object
 }
+
+export interface FormInputTextareaType extends FormItemBaseType {
+  type: 'inputTextarea'
+  placeholder?: string
+  maxLength?: number | { length: number, errorOnly?: boolean }
+  showWordLimit?: boolean
+  allowClear?: boolean
+  autoSize?: boolean | { minRows: number, maxRows: number }
+  textareaAttrs?: object
+}
+
+export interface FormInputTagType extends FormItemBaseType {
+  type: 'inputTag'
+  placeholder?: string
+  readonly?: boolean
+  allowClear?: boolean
+  maxTagCount?: number
+  uniqueValue?: boolean
+}
