@@ -1,0 +1,20 @@
+import type { HiFormConfigItemType } from "../types/form"
+
+export const getValidateTrigger = (type: HiFormConfigItemType['type']): HiFormConfigItemType['validateTrigger'] => {
+	if (['inputNumber'].includes(type)) {
+		return ['change', 'blur']
+	}
+  return ['blur']
+}
+
+export const getValidateRule = (itemConfig: HiFormConfigItemType) => {
+	const { validate, label } = itemConfig
+
+  if (typeof validate === 'boolean') {
+    return [{ required: validate, message: `${label}不能为空` }]
+  }
+  if (Array.isArray(validate)) {
+    return validate.map(item => ({ message: `${label}不能为空`, ...item }))
+  }
+  return [{ message: `${label}不能为空`, ...validate }]
+}

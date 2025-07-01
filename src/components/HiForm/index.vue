@@ -1,5 +1,7 @@
 <script setup>
-import { defineProps, reactive } from 'vue'
+import { Form } from '@arco-design/web-vue'
+import RenderFormItem from './components/RenderFormItem.vue'
+import { defineProps, reactive, provide, useTemplateRef, watch } from 'vue'
 
 const props = defineProps({
   formInstance: {
@@ -9,8 +11,48 @@ const props = defineProps({
 })
 const { formInstance } = props
 
+const formRules = formInstance.getFormRules()
 const formConfigList = reactive(formInstance.getFormConfig())
 const formData = reactive(formInstance.getFormData())
+const formRef = useTemplateRef('form-ref')
 
-console.log(formConfigList, formData)
+provide('formData', formData)
+
+formInstance._setFormRef(formRef)
+
+const handleSubmit = () => {
+	formInstance.validateFormData().then((res) => {
+		if (!res) {
+			if (formInstance.submitListener) {
+				formInstance.callSubmitListener()
+			} else {
+				throw new Error('please set onSubmit in formInstance')
+			}
+		}
+	})
+}
+
+const handleCancel = () => {
+	console.log('cancel')
+}
 </script>
+
+<template>
+	<a-form :model="formData" :rules="formRules" ref="form-ref">
+		<a-form-item
+			v-for="item in formConfigList"
+			:key="item.model"
+			:label="item.label"
+			:field="item.model"
+			:validate-trigger="item.validateTrigger"
+		>
+			<RenderFormItem :formItemConfig="item" />
+		</a-form-item>
+		<a-form-item>
+			<a-space :size="16">
+				<a-button type="primary" @click="handleSubmit">提交</a-button>
+				<a-button @click="handleCancel">取消</a-button>
+			</a-space>
+		</a-form-item>
+	</a-form>
+</template>
