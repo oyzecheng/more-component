@@ -9,9 +9,15 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     HiForm: typeof import('./src/components/HiForm/index.vue')['default']
+    RenderCascader: typeof import('./src/components/HiForm/components/RenderCascader.vue')['default']
+    RenderColorPicker: typeof import('./src/components/HiForm/components/RenderColorPicker.vue')['default']
+    RenderDatePicker: typeof import('./src/components/HiForm/components/RenderDatePicker.vue')['default']
     RenderFormItem: typeof import('./src/components/HiForm/components/RenderFormItem.vue')['default']
     RenderInput: typeof import('./src/components/HiForm/components/RenderInput.vue')['default']
+    RenderRate: typeof import('./src/components/HiForm/components/RenderRate.vue')['default']
     RenderSelect: typeof import('./src/components/HiForm/components/RenderSelect.vue')['default']
+    RenderSlider: typeof import('./src/components/HiForm/components/RenderSlider.vue')['default']
+    RenderSwitch: typeof import('./src/components/HiForm/components/RenderSwitch.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
