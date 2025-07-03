@@ -24,6 +24,9 @@ import type {
 import type { FormRateType } from '@/components/HiForm/types/rate.ts'
 import type { FormSliderType } from '@/components/HiForm/types/slider.ts'
 import type { FormSwitchType } from '@/components/HiForm/types/switch.ts'
+import type { FormTimePickerType } from '@/components/HiForm/types/timePicker.ts'
+import type { FormTreeSelectType } from '@/components/HiForm/types/treeSelect.ts'
+import type { FormUploadType } from '@/components/HiForm/types/upload.ts'
 
 export type FormType = 'input' 
 | 'inputPassword' 
@@ -45,6 +48,9 @@ export type FormType = 'input'
 | 'rate'
 | 'slider'
 | 'switch'
+| 'timePicker'
+| 'treeSelect'
+| 'upload'
 
 export type HiFormConfigItemType = FormInputType 
 | FormInputPasswordType 
@@ -66,5 +72,8 @@ export type HiFormConfigItemType = FormInputType
 | FormRateType
 | FormSliderType
 | FormSwitchType
+| FormTimePickerType
+| FormTreeSelectType
+| FormUploadType
 
 export type HiFormConfigType = HiFormConfigItemType[]

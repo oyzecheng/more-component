@@ -18,6 +18,9 @@ declare module 'vue' {
     RenderSelect: typeof import('./src/components/HiForm/components/RenderSelect.vue')['default']
     RenderSlider: typeof import('./src/components/HiForm/components/RenderSlider.vue')['default']
     RenderSwitch: typeof import('./src/components/HiForm/components/RenderSwitch.vue')['default']
+    RenderTimePicker: typeof import('./src/components/HiForm/components/RenderTimePicker.vue')['default']
+    RenderTreeSelect: typeof import('./src/components/HiForm/components/RenderTreeSelect.vue')['default']
+    RenderUpload: typeof import('./src/components/HiForm/components/RenderUpload.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

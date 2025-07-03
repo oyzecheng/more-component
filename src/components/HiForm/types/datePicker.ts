@@ -10,6 +10,7 @@ interface FormDatePickerCommonType extends FormItemBaseType {
 	disabledDate?: DatePicker['disabledDate']
 	disabledTime?: DatePicker['disabledTime']
 	valueFormat?: DatePicker['valueFormat']
+	format?: string
 }
 
 export interface FormDatePickerType extends FormDatePickerCommonType {

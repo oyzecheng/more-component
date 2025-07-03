@@ -3,6 +3,7 @@ import HiFormItemConfig from '@/components/HiForm/instance/formItem.ts'
 import type { Ref } from 'vue'
 import { Form, type FieldRule } from '@arco-design/web-vue'
 import { getValidateRule, getValidateTrigger } from '@/components/HiForm/utils/validateRule.ts'
+import { uniqueId } from 'lodash-es'
 
 class HiFormConfig {
   private formConfigList: HiFormConfigType = []
@@ -10,10 +11,12 @@ class HiFormConfig {
   private formData: Record<string, any> = {}
   private _formRef: Ref<Form | null> | null = null
   private submitListener: ((formData: Record<string, any>) => void) | null = null
+  readonly formId: string
 
   constructor(formConfigList: HiFormConfigType) {
     this.formConfigList = formConfigList
     this.initFormData()
+    this.formId = uniqueId('form-')
   }
 
   private initFormData() {

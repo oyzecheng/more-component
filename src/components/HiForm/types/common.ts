@@ -14,5 +14,7 @@ export interface FormItemBaseType {
   validate?: boolean | FieldRule | FieldRule[]
   show?: boolean | ((formData: Record<string, any>) => boolean)
   validateTrigger?: validateTriggerType | validateTriggerType[]
+  tooltip?: string
+  showColon?: boolean
 }
 

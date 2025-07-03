@@ -7,6 +7,9 @@ import RenderDatePicker from './RenderDatePicker.vue'
 import RenderRate from './RenderRate.vue'
 import RenderSlider from './RenderSlider.vue'
 import RenderSwitch from './RenderSwitch.vue'
+import RenderTimePicker from './RenderTimePicker.vue'
+import RenderTreeSelect from './RenderTreeSelect.vue'
+import RenderUpload from './RenderUpload.vue'
 import { defineProps, computed } from 'vue'
 
 const props = defineProps({
@@ -44,6 +47,15 @@ const renderComponent = computed(() => {
 	}
 	if (formItemConfig.type === 'switch') {
 		return RenderSwitch
+	}
+	if (formItemConfig.type === 'timePicker') {
+		return RenderTimePicker
+	}
+	if (formItemConfig.type === 'treeSelect') {
+		return RenderTreeSelect
+	}
+	if (formItemConfig.type === 'upload') {
+		return RenderUpload
 	}
   return null
 })

@@ -44,6 +44,8 @@ const handleCancel = () => {
 				:label="item.label"
 				:field="item.model"
 				:validate-trigger="item.validateTrigger"
+				:tooltip="item.tooltip"
+				:show-colon="item.showColon"
 				v-if="typeof item.show === 'function' ? item.show(formData) : typeof item.show === 'boolean' ? item.show : true"
 			>
 				<RenderFormItem :formItemConfig="item" />

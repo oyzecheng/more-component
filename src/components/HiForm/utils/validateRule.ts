@@ -4,6 +4,9 @@ export const getValidateTrigger = (type: HiFormConfigItemType['type']): HiFormCo
 	if (['inputNumber', 'select'].includes(type)) {
 		return ['change', 'blur']
 	}
+  if (['radio', 'checkbox', 'cascader', 'colorPicker', 'datePicker', 'monthPicker', 'yearPicker', 'quarterPicker', 'weekPicker', 'rangePicker', 'rate', 'slider', 'switch', 'timePicker', 'treeSelect', 'upload'].includes(type)) {
+    return ['change']
+  }
   return ['blur']
 }
 
