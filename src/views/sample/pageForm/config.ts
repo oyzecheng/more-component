@@ -1,6 +1,4 @@
-import useHiForm from '@/components/HiForm/hooks/useHiForm.ts'
-import { computed, reactive } from 'vue'
-import HiFormConfig from '@/components/HiForm/instance'
+import { reactive } from 'vue'
 import type { HiFormConfigType } from '@/components/HiForm/types/form'
 
 export const RawFormConfigList: HiFormConfigType = reactive([
@@ -28,13 +26,3 @@ export const RawFormConfigList: HiFormConfigType = reactive([
   { type: 'treeSelect', label: 'treeSelect', model: 'treeSelect', allowClear: true, treeCheckable: true, data: [{ title: '1', key: 1, children: [{ title: '1-1', key: 11 }, { title: '1-2', key: 12 }] }, { title: '2', key: 2, children: [{ title: '2-1', key: 21 }, { title: '2-2', key: 22 }] }] },
   { type: 'upload', label: 'upload', model: 'upload', action: 'https://www.baidu.com', listType: 'picture-card', showUploadButton: true, showPreviewButton: true, showRemoveButton: true, showCancelButton: true, showRetryButton: true, showFileList: true, multiple: true, directory: true, draggable: true, tip: '上传', headers: { 'Authorization': 'Bearer 1234567890' }, data: { name: 'test' }, name: 'test', withCredentials: true, customRequest: (options) => { console.log(options) }, limit: 1}
 ])
-
-export const testFormConfig = useHiForm(RawFormConfigList)
-
-export const testFormConfigList: HiFormConfigType = reactive([
-  { type: 'input', label: 'name', model: 'name'}
-])
-
-export const testInstance = computed(() => {
-  return new HiFormConfig(testFormConfigList)
-})

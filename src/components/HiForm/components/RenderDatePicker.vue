@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, inject, computed } from 'vue'
 import { DatePicker, MonthPicker, YearPicker, QuarterPicker, WeekPicker, RangePicker } from '@arco-design/web-vue'
+import type { HiFormDataType } from '@/components/HiForm/types/form.ts'
 
 const props = defineProps({
 	formItemConfig: {
@@ -10,7 +11,7 @@ const props = defineProps({
 })
 const { formItemConfig } = props
 
-const formData = inject('formData')
+const formData = inject<HiFormDataType>('formData', {})
 
 const renderComponent = computed(() => {
 	switch (formItemConfig.type) {

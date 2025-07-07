@@ -21,43 +21,37 @@ const props = defineProps({
 const { formItemConfig } = props
 
 const renderComponent = computed(() => {
-  const inputList = ['input', 'inputPassword', 'inputSearch', 'inputNumber', 'inputTextarea', 'inputTag']
-  if (inputList.includes(formItemConfig.type)) {
-    return RenderInput
+  const componentMap = {
+    // Input components
+    input: RenderInput,
+    inputPassword: RenderInput,
+    inputSearch: RenderInput,
+    inputNumber: RenderInput,
+    inputTextarea: RenderInput,
+    inputTag: RenderInput,
+    // Select components
+    select: RenderSelect,
+    radio: RenderSelect,
+    checkbox: RenderSelect,
+    // Date picker components
+    datePicker: RenderDatePicker,
+    monthPicker: RenderDatePicker,
+    yearPicker: RenderDatePicker,
+    quarterPicker: RenderDatePicker,
+    weekPicker: RenderDatePicker,
+    rangePicker: RenderDatePicker,
+    // Other components
+    cascader: RenderCascader,
+    colorPicker: RenderColorPicker,
+    rate: RenderRate,
+    slider: RenderSlider,
+    switch: RenderSwitch,
+    timePicker: RenderTimePicker,
+    treeSelect: RenderTreeSelect,
+    upload: RenderUpload
   }
-	const selectList = ['select', 'radio', 'checkbox']
-	if (selectList.includes(formItemConfig.type)) {
-		return RenderSelect
-	}
-	if (formItemConfig.type === 'cascader') {
-		return RenderCascader
-	}
-	if (formItemConfig.type === 'colorPicker') {
-		return RenderColorPicker
-	}
-	const datePickerList = ['datePicker', 'monthPicker', 'yearPicker', 'quarterPicker', 'weekPicker', 'rangePicker']
-	if (datePickerList.includes(formItemConfig.type)) {
-		return RenderDatePicker
-	}
-	if (formItemConfig.type === 'rate') {
-		return RenderRate
-	}
-	if (formItemConfig.type === 'slider') {
-		return RenderSlider
-	}
-	if (formItemConfig.type === 'switch') {
-		return RenderSwitch
-	}
-	if (formItemConfig.type === 'timePicker') {
-		return RenderTimePicker
-	}
-	if (formItemConfig.type === 'treeSelect') {
-		return RenderTreeSelect
-	}
-	if (formItemConfig.type === 'upload') {
-		return RenderUpload
-	}
-  return null
+
+  return componentMap[formItemConfig.type] || null
 })
 
 </script>

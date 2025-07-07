@@ -8,6 +8,7 @@ import {
 	InputTag
 } from '@arco-design/web-vue'
 import { defineProps, inject, computed } from 'vue'
+import type { HiFormDataType } from '@/components/HiForm/types/form.ts'
 
 const props = defineProps({
   formItemConfig: {
@@ -17,7 +18,7 @@ const props = defineProps({
 })
 const { formItemConfig } = props
 
-const formData = inject('formData')
+const formData = inject<HiFormDataType>('formData', {})
 
 const renderComponent = computed(() => {
   switch (formItemConfig.type) {
@@ -38,28 +39,28 @@ const renderComponent = computed(() => {
 </script>
 
 <template>
-	<component
-		:is="renderComponent"
-		v-model="formData[formItemConfig.model]"
-		:size="formItemConfig.size"
-		:placeholder="formItemConfig.placeholder"
-		:max-length="formItemConfig.maxLength"
-		:show-word-limit="formItemConfig.showWordLimit"
-		:allow-clear="formItemConfig.allowClear"
-		:disabled="formItemConfig.disabled"
-		:readonly="formItemConfig.readonly"
-		:input-attrs="formItemConfig.inputAttrs"
-		:prepend="formItemConfig.prepend"
-		:append="formItemConfig.append"
-		:visibility="formItemConfig.visibility"
-		:invisible-button="formItemConfig.invisibleButton"
-		:loading="formItemConfig.loading"
-		:button-text="formItemConfig.buttonText"
-		:button-props="formItemConfig.buttonProps"
-		:auto-size="formItemConfig.autoSize"
-		:textarea-attrs="formItemConfig.textareaAttrs"
-		:max-tag-count="formItemConfig.maxTagCount"
-		:unique-value="formItemConfig.uniqueValue"
-		@change="formItemConfig.onChange"
-	/>
+  <component
+    :is="renderComponent"
+    v-model="formData[formItemConfig.model]"
+    :size="formItemConfig.size"
+    :placeholder="formItemConfig.placeholder"
+    :max-length="formItemConfig.maxLength"
+    :show-word-limit="formItemConfig.showWordLimit"
+    :allow-clear="formItemConfig.allowClear"
+    :disabled="formItemConfig.disabled"
+    :readonly="formItemConfig.readonly"
+    :input-attrs="formItemConfig.inputAttrs"
+    :prepend="formItemConfig.prepend"
+    :append="formItemConfig.append"
+    v-model:visibility="formItemConfig.visibility"
+    :invisible-button="formItemConfig.invisibleButton"
+    :loading="formItemConfig.loading"
+    :button-text="formItemConfig.buttonText"
+    :button-props="formItemConfig.buttonProps"
+    :auto-size="formItemConfig.autoSize"
+    :textarea-attrs="formItemConfig.textareaAttrs"
+    :max-tag-count="formItemConfig.maxTagCount"
+    :unique-value="formItemConfig.uniqueValue"
+    @change="formItemConfig.onChange"
+  />
 </template>

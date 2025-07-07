@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue'
-import { TreeSelect } from '@arco-design/web-vue'
+import type { HiFormDataType } from '@/components/HiForm/types/form.ts'
 
 const props = defineProps({
 	formItemConfig: {
@@ -11,7 +11,7 @@ const props = defineProps({
 
 const { formItemConfig } = props
 
-const formData = inject('formData')
+const formData = inject<HiFormDataType>('formData', {})
 </script>
 
 <template>

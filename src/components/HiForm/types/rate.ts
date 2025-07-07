@@ -5,7 +5,7 @@ export interface FormRateType extends FormItemBaseType {
 	count?: number
 	allowHalf?: boolean
 	allowClear?: boolean
-    garding?: boolean
-    readonly?: boolean
-    color?: string
+	garding?: boolean
+	readonly?: boolean
+	color?: string
 }

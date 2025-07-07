@@ -19,7 +19,7 @@ import type {
 	FormYearPickerType,
 	FormQuarterPickerType,
 	FormWeekPickerType,
-	FormRangePickerType	
+	FormRangePickerType
 } from '@/components/HiForm/types/datePicker.ts'
 import type { FormRateType } from '@/components/HiForm/types/rate.ts'
 import type { FormSliderType } from '@/components/HiForm/types/slider.ts'
@@ -28,9 +28,9 @@ import type { FormTimePickerType } from '@/components/HiForm/types/timePicker.ts
 import type { FormTreeSelectType } from '@/components/HiForm/types/treeSelect.ts'
 import type { FormUploadType } from '@/components/HiForm/types/upload.ts'
 
-export type FormType = 'input' 
-| 'inputPassword' 
-| 'inputSearch' 
+export type FormType = 'input'
+| 'inputPassword'
+| 'inputSearch'
 | 'inputNumber'
 | 'inputTextarea'
 | 'inputTag'
@@ -52,9 +52,9 @@ export type FormType = 'input'
 | 'treeSelect'
 | 'upload'
 
-export type HiFormConfigItemType = FormInputType 
-| FormInputPasswordType 
-| FormInputSearchType 
+export type HiFormConfigItemType = FormInputType
+| FormInputPasswordType
+| FormInputSearchType
 | FormInputNumberType
 | FormInputTextareaType
 | FormInputTagType
@@ -77,3 +77,5 @@ export type HiFormConfigItemType = FormInputType
 | FormUploadType
 
 export type HiFormConfigType = HiFormConfigItemType[]
+
+export type HiFormDataType = Record<string, any>

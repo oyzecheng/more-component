@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, inject, computed } from 'vue'
 import { RadioGroup, CheckboxGroup } from '@arco-design/web-vue'
+import type { HiFormDataType } from '@/components/HiForm/types/form.ts'
 
 const props = defineProps({
 	formItemConfig: {
@@ -10,7 +11,7 @@ const props = defineProps({
 })
 const { formItemConfig } = props
 
-const formData = inject('formData')
+const formData = inject<HiFormDataType>('formData', {})
 
 const renderComponent = computed(() => {
 	if (formItemConfig.type === 'radio') {
@@ -26,28 +27,15 @@ const renderComponent = computed(() => {
   <a-select
 		v-if="formItemConfig.type === 'select'"
     v-model="formData[formItemConfig.model]"
-    :size="formItemConfig.size"
-    :disabled="formItemConfig.disabled"
-    :multiple="formItemConfig.multiple"
-    :placeholder="formItemConfig.placeholder"
-    :loading="formItemConfig.loading"
-    :allow-clear="formItemConfig.allowClear"
-    :allow-search="formItemConfig.allowSearch"
-    :allow-create="formItemConfig.allowCreate"
-    :options="formItemConfig.options"
-    :limit="formItemConfig.limit"
+    vi-bind="formItemConfig"
 		@change="formItemConfig.onChange"
   />
 	<component
 		v-else
 		:is="renderComponent"
 		v-model="formData[formItemConfig.model]"
-		:size="formItemConfig.size"
-		:disabled="formItemConfig.disabled"
-		:options="formItemConfig.options"
+		v-bind="formItemConfig"
 		:type="formItemConfig.radioType"
-		:direction="formItemConfig.direction"
-		:max="formItemConfig.max"
 		@change="formItemConfig.onChange"
 	/>
 </template>

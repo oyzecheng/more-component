@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue'
-import { Cascader } from '@arco-design/web-vue'
+import type { HiFormDataType } from '@/components/HiForm/types/form.ts'
 
 const props = defineProps({
 	formItemConfig: {
@@ -10,23 +10,13 @@ const props = defineProps({
 })
 const { formItemConfig } = props
 
-const formData = inject('formData')
+const formData = inject<HiFormDataType>('formData', {})
 </script>
 
 <template>
 	<a-cascader
 		v-model="formData[formItemConfig.model]"
-		:options="formItemConfig.options"
-		:path-mode="formItemConfig.pathMode"
-		:multiple="formItemConfig.multiple"
-		:allow-search="formItemConfig.allowSearch"
-		:allow-clear="formItemConfig.allowClear"
-		:expand-trigger="formItemConfig.expandTrigger"
-		:placeholder="formItemConfig.placeholder"
-		:max-tag-count="formItemConfig.maxTagCount"
-		:loading="formItemConfig.loading"
-		:disabled="formItemConfig.disabled"
-		:size="formItemConfig.size"
+		v-bind="formItemConfig"
 		@change="formItemConfig.onChange"
 	/>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue'
-import { ColorPicker } from '@arco-design/web-vue'
+import type { HiFormDataType } from '@/components/HiForm/types/form.ts'
 
 const props = defineProps({
 	formItemConfig: {
@@ -10,22 +10,13 @@ const props = defineProps({
 })
 const { formItemConfig } = props
 
-const formData = inject('formData')
+const formData = inject<HiFormDataType>('formData', {})
 </script>
 
 <template>
 	<a-color-picker
 		v-model="formData[formItemConfig.model]"
-		:format="formItemConfig.format"
-		:show-text="formItemConfig.showText"
-		:show-history="formItemConfig.showHistory"
-		:show-preset="formItemConfig.showPreset"
-		:disabled-alpha="formItemConfig.disabledAlpha"
-		:hide-trigger="formItemConfig.hideTrigger"
-		:history-colors="formItemConfig.historyColors"
-		:preset-colors="formItemConfig.presetColors"
-		:disabled="formItemConfig.disabled"
-		:size="formItemConfig.size"
+		v-bind="formItemConfig"
 		@change="formItemConfig.onChange"
 	/>
 </template>
