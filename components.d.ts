@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     HiForm: typeof import('./src/components/HiForm/index.vue')['default']
+    HiTable: typeof import('./src/components/HiTable/index.vue')['default']
     RenderCascader: typeof import('./src/components/HiForm/components/RenderCascader.vue')['default']
     RenderColorPicker: typeof import('./src/components/HiForm/components/RenderColorPicker.vue')['default']
     RenderDatePicker: typeof import('./src/components/HiForm/components/RenderDatePicker.vue')['default']

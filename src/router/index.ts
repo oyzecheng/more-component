@@ -4,13 +4,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    redirect: '/sample/pageForm'
+    redirect: '/sample/pageTable'
   },
   {
     path: '/sample',
     name: 'sample',
     component: () => import('@/layouts/RouterView.vue'),
-    redirect: '/pageForm',
+    redirect: '/pageTable',
     children: [
       {
         path: 'pageForm',
@@ -21,6 +21,16 @@ const routes: RouteRecordRaw[] = [
         path: 'pageTable',
         name: 'pageTable',
         component: () => import('@/views/sample/pageTable/index.vue')
+      },
+      {
+        path: 'pageTableSeparated',
+        name: 'pageTableSeparated',
+        component: () => import('@/views/sample/pageTable/separated-config-demo.vue')
+      },
+      {
+        path: 'pageTableTest',
+        name: 'pageTableTest',
+        component: () => import('@/views/sample/pageTable/test-fix.vue')
       }
     ]
   }
