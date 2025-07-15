@@ -51,7 +51,7 @@ const addChild = (parentIndex) => {
   if (!localOptions.value[parentIndex].children) {
     localOptions.value[parentIndex].children = []
   }
-  
+
   if (props.type === 'tree') {
     localOptions.value[parentIndex].children.push({
       title: '',
@@ -77,9 +77,9 @@ const removeChild = (parentIndex, childIndex) => {
     <div v-if="localOptions.length === 0" class="text-center py-4">
       <a-button @click="addOption">添加选项</a-button>
     </div>
-    
+
     <div v-else>
-      <div v-for="(option, index) in localOptions" :key="index" class="mb-4 p-3 border rounded">
+      <div v-for="(option, index) in localOptions" :key="index" class="mb-4 p-3 border border-gray-200 rounded">
         <!-- 简单选项 -->
         <template v-if="type === 'simple'">
           <div class="flex gap-2 items-center">
@@ -90,7 +90,7 @@ const removeChild = (parentIndex, childIndex) => {
             </a-button>
           </div>
         </template>
-        
+
         <!-- 级联选项 -->
         <template v-if="type === 'cascader'">
           <div class="flex gap-2 items-center mb-2">
@@ -101,7 +101,7 @@ const removeChild = (parentIndex, childIndex) => {
               <icon-delete />
             </a-button>
           </div>
-          
+
           <div v-if="option.children && option.children.length > 0" class="ml-4 border-l-2 border-gray-200 pl-3">
             <div v-for="(child, childIndex) in option.children" :key="childIndex" class="flex gap-2 items-center mb-1">
               <a-input v-model="child.label" placeholder="子标签" size="small" @change="updateOptions" />
@@ -112,7 +112,7 @@ const removeChild = (parentIndex, childIndex) => {
             </div>
           </div>
         </template>
-        
+
         <!-- 树形选项 -->
         <template v-if="type === 'tree'">
           <div class="flex gap-2 items-center mb-2">
@@ -123,7 +123,7 @@ const removeChild = (parentIndex, childIndex) => {
               <icon-delete />
             </a-button>
           </div>
-          
+
           <div v-if="option.children && option.children.length > 0" class="ml-4 border-l-2 border-gray-200 pl-3">
             <div v-for="(child, childIndex) in option.children" :key="childIndex" class="flex gap-2 items-center mb-1">
               <a-input v-model="child.title" placeholder="子标题" size="small" @change="updateOptions" />
@@ -135,7 +135,7 @@ const removeChild = (parentIndex, childIndex) => {
           </div>
         </template>
       </div>
-      
+
       <a-button @click="addOption" class="w-full">添加选项</a-button>
     </div>
   </div>

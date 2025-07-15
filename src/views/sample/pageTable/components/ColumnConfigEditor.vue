@@ -95,7 +95,7 @@ const getFieldValue = (key) => {
   <div class="column-config-editor">
     <div class="flex mb-4">
       <!-- 列列表 -->
-      <div class="w-1/2 border-r pr-4">
+      <div class="w-1/2 pr-4">
         <div class="flex justify-between items-center mb-2">
           <h4 class="font-bold">列配置</h4>
           <a-button size="small" @click="addColumn">添加列</a-button>

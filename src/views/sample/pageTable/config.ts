@@ -1,5 +1,6 @@
-import { reactive } from 'vue'
+import { reactive, h } from 'vue'
 import type { HiTableConfigType } from '@/components/HiTable/types/table'
+import { Tag } from '@arco-design/web-vue'
 
 // 模拟数据
 const generateMockData = (count: number = 50) => {
@@ -74,8 +75,8 @@ export const RawTableConfig: HiTableConfigType = reactive({
       },
       render: (record) => {
         return record.status === 'active' ?
-          '<span style="color: green;">激活</span>' :
-          '<span style="color: red;">未激活</span>'
+          h(Tag, { color: 'green' }, '激活') :
+          h(Tag, { color: 'red' }, '未激活')
       }
     },
     {

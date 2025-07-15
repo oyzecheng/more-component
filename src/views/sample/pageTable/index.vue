@@ -196,7 +196,7 @@ watch(
 <template>
   <div class="flex h-screen">
     <!-- 左侧表格展示 -->
-    <div class="w-1/2 p-4 border-r">
+    <div class="w-1/2 p-4">
       <div class="mb-4">
         <h2 class="text-lg font-bold mb-2">HiTable 组件展示</h2>
 
@@ -250,20 +250,19 @@ watch(
     <!-- 右侧配置编辑 -->
     <div class="w-1/2 p-4">
       <a-tabs>
-        <a-tab-pane key="1" title="表格预览">
+        <a-tab-pane key="1" title="表格配置器">
+          <TableConfigEditor
+            :table-config="fullTableConfig"
+            @update:config="handleConfigChange"
+          />
+        </a-tab-pane>
+        <a-tab-pane key="2" title="表格JSON">
           <JsonEditor
             :modelValue="fullTableConfig"
             @update:modelValue="handleConfigChange"
             mode="text"
             :main-menu-bar="false"
             class="h-96"
-          />
-        </a-tab-pane>
-
-        <a-tab-pane key="2" title="表格配置器">
-          <TableConfigEditor
-            :table-config="fullTableConfig"
-            @update:config="handleConfigChange"
           />
         </a-tab-pane>
       </a-tabs>

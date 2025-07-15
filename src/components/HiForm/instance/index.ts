@@ -55,6 +55,14 @@ class HiFormConfig {
     return this._formRef?.value?.validate()
   }
 
+  clearValidate() {
+    return this._formRef?.value?.clearValidate()
+  }
+
+  resetFields() {
+    return this._formRef?.value?.resetFields()
+  }
+
   getFormItemInstance(model: string) {
     const formConfigItem = this.formConfigList.find(item => item.model === model)
     if (!formConfigItem) {

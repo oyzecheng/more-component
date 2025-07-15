@@ -90,19 +90,6 @@ class HiTableConfig implements HiTableInstanceMethods {
     this._tableRef = ref
   }
 
-  // 获取分离的配置（推荐使用）
-  getColumns() {
-    return this._columns.value
-  }
-
-  getData() {
-    return this._data.value
-  }
-
-  getConfig() {
-    return this._config
-  }
-
   // 获取完整配置（向后兼容）
   getTableConfig(): HiTableConfigType {
     return {

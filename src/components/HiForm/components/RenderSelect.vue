@@ -27,7 +27,7 @@ const renderComponent = computed(() => {
   <a-select
 		v-if="formItemConfig.type === 'select'"
     v-model="formData[formItemConfig.model]"
-    vi-bind="formItemConfig"
+    v-bind="formItemConfig"
 		@change="formItemConfig.onChange"
   />
 	<component

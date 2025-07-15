@@ -21,16 +21,6 @@ const routes: RouteRecordRaw[] = [
         path: 'pageTable',
         name: 'pageTable',
         component: () => import('@/views/sample/pageTable/index.vue')
-      },
-      {
-        path: 'pageTableSeparated',
-        name: 'pageTableSeparated',
-        component: () => import('@/views/sample/pageTable/separated-config-demo.vue')
-      },
-      {
-        path: 'pageTableTest',
-        name: 'pageTableTest',
-        component: () => import('@/views/sample/pageTable/test-fix.vue')
       }
     ]
   }

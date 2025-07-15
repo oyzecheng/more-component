@@ -220,7 +220,7 @@ const setFieldValue = (fieldKey, value) => {
   </div>
   <div class="form-config-editor">
     <div class="flex mb-4">
-      <div class="w-1/3 border-r pr-2">
+      <div class="w-1/3 pr-2">
         <h3 class="mb-2 font-bold">表单项列表</h3>
         <a-list>
           <a-list-item
@@ -229,8 +229,11 @@ const setFieldValue = (fieldKey, value) => {
             :class="{ 'bg-blue-100': selectedItemIndex === index }"
             @click="selectedItemIndex = index"
           >
-            <div class="flex justify-between w-full">
-              <span>{{ item.label }} ({{ item.type }})</span>
+            <div class="flex justify-between w-full items-center">
+              <div>
+                <div class="leading-none">{{ item.label }}</div>
+                <span class="text-xs right-0 top-0 text-gray-600 leading-4 rounded-bl-md">{{ item.type }}</span>
+              </div>
               <a-button type="text" status="danger" @click.stop="removeFormItem(index)">
                 <icon-delete />
               </a-button>
@@ -238,8 +241,10 @@ const setFieldValue = (fieldKey, value) => {
           </a-list-item>
         </a-list>
 
-        <a-dropdown trigger="click">
-          <a-button type="primary" class="mt-4">添加表单项</a-button>
+        <a-dropdown trigger="click" class="w-54">
+          <div class="mt-4">
+            <a-button type="primary" long>添加表单项</a-button>
+          </div>
           <template #content>
             <template v-for="group in FORM_TYPE_GROUPS" :key="group.label">
               <a-dgroup :title="group.label">

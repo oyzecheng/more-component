@@ -33,6 +33,8 @@ const handleSubmit = () => {
 
 const handleCancel = () => {
   console.log('cancel')
+  formInstance.resetFields()
+  formInstance.clearValidate()
 }
 </script>
 
