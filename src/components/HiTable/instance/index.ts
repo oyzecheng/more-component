@@ -1,13 +1,14 @@
 import type {
-  HiTableConfigType,
   HiTableGeneralConfigType,
   HiTableSeparatedConfigType,
-  HiTableInstanceMethods
+  HiTableInstanceMethods,
+  LoadDataFunction,
+  LoadDataParams
 } from '../types/table'
 import type { HiTableColumnType } from '../types/column'
 import type { Ref } from 'vue'
-import { uniqueId } from 'lodash-es'
-import { reactive, ref } from 'vue'
+import { uniqueId, isPlainObject } from 'lodash-es'
+import { reactive, ref, computed } from 'vue'
 
 class HiTableConfig implements HiTableInstanceMethods {
   // 分离的配置存储
@@ -15,39 +16,23 @@ class HiTableConfig implements HiTableInstanceMethods {
   private _data = ref<any[]>([])
   private _config = reactive<HiTableGeneralConfigType>({})
 
+  private selectedRows = ref<any[]>([])
+
   // 内部状态
   private _tableRef: Ref<any> | null = null
-  private selectedRowKeys: (string | number)[] = []
-  private expandedRowKeys: (string | number)[] = []
+  private selectedRowKeys = ref<(string | number)[]>([])
+  private expandedRowKeys = ref<(string | number)[]>([])
   private currentPage: number = 1
   private pageSize: number = 10
   private total: number = 0
+  private loadDataFunction: LoadDataFunction | null = null
+  private isStaticData: boolean = true
   readonly tableId: string
 
-  constructor(config: HiTableConfigType | HiTableSeparatedConfigType) {
+  constructor(config: HiTableSeparatedConfigType) {
     this.tableId = uniqueId('table-')
-
-    // 检查是否为分离配置模式
-    if (this.isSeparatedConfig(config)) {
-      // 分离配置模式
-      this.initWithSeparatedConfig(config as HiTableSeparatedConfigType)
-    } else {
-      // 传统配置模式（向后兼容）
-      this.initWithLegacyConfig(config as HiTableConfigType)
-    }
-
+    this.initWithSeparatedConfig(config)
     this.initTableConfig()
-  }
-
-  private isSeparatedConfig(config: any): config is HiTableSeparatedConfigType {
-    return config &&
-           typeof config === 'object' &&
-           'columns' in config &&
-           'data' in config &&
-           'config' in config &&
-           Array.isArray(config.columns) &&
-           Array.isArray(config.data) &&
-           typeof config.config === 'object'
   }
 
   private initWithSeparatedConfig(config: HiTableSeparatedConfigType) {
@@ -55,14 +40,7 @@ class HiTableConfig implements HiTableInstanceMethods {
     this._data.value = config.data
     Object.assign(this._config, config.config)
     this.total = config.data.length
-  }
-
-  private initWithLegacyConfig(config: HiTableConfigType) {
-    const { columns, data, ...generalConfig } = config
-    this._columns.value = columns
-    this._data.value = data || []
-    Object.assign(this._config, generalConfig)
-    this.total = this._data.value.length
+    this.isStaticData = true
   }
 
   private initTableConfig() {
@@ -76,12 +54,12 @@ class HiTableConfig implements HiTableInstanceMethods {
 
     // 初始化行选择配置
     if (this._config.rowSelection) {
-      this.selectedRowKeys = this._config.rowSelection.selectedRowKeys || []
+      this.selectedRowKeys.value = this._config.rowSelection.selectedRowKeys || []
     }
 
     // 初始化展开行配置
     if (this._config.expandable) {
-      this.expandedRowKeys = this._config.expandable.expandedRowKeys ||
+      this.expandedRowKeys.value = this._config.expandable.expandedRowKeys ||
                             this._config.expandable.defaultExpandedRowKeys || []
     }
   }
@@ -90,13 +68,36 @@ class HiTableConfig implements HiTableInstanceMethods {
     this._tableRef = ref
   }
 
-  // 获取完整配置（向后兼容）
-  getTableConfig(): HiTableConfigType {
-    return {
-      columns: this._columns.value,
-      data: this._data.value,
-      ...this._config
+  // selected
+  setSelectedRow(row: Record<string, any>) {
+    this.selectedRows.value.push(row)
+  }
+
+  getSelectedRows() {
+    return this.selectedRows
+  }
+
+  removeSelectedRow(rowKey: string | number) {
+    const index = this.selectedRows.value.findIndex(item => item === rowKey)
+    if (index > -1) {
+      return this.selectedRows.value.splice(index, 1)
     }
+    const i = this.selectedRows.value.findIndex(item => item[this._config.rowKey || 'id'] === rowKey)
+    if (i > -1) {
+      return this.selectedRows.value.splice(i, 1)
+    }
+    throw new Error(`removeSelectedRow failed: rowKey not found in selectedRows. rowKey: ${rowKey}`)
+  }
+
+  getSelectedRowKeys() {
+    return computed(() => {
+      return this.selectedRows.value.map(item => {
+        if (isPlainObject(item)) {
+          return item[this._config.rowKey || 'id']
+        }
+        return item
+      })
+    })
   }
 
   // 获取配置的方法
@@ -123,11 +124,13 @@ class HiTableConfig implements HiTableInstanceMethods {
 
   setData(data: any[]): void {
     this._data.value = data
-    this.total = data.length
-    if (this._config.pagination !== false) {
-      this._config.pagination = {
-        ...this._config.pagination,
-        total: this.total
+    if (this.isStaticData) {
+      this.total = data.length
+      if (this._config.pagination !== false) {
+        this._config.pagination = {
+          ...this._config.pagination,
+          total: this.total
+        }
       }
     }
   }
@@ -168,20 +171,9 @@ class HiTableConfig implements HiTableInstanceMethods {
     }
   }
 
-  // 选择操作方法
-  getSelectedRowKeys(): (string | number)[] {
-    return this.selectedRowKeys
-  }
-
-  setSelectedRowKeys(rowKeys: (string | number)[]): void {
-    this.selectedRowKeys = rowKeys
-    if (this._config.rowSelection) {
-      this._config.rowSelection.selectedRowKeys = rowKeys
-    }
-  }
 
   clearSelection(): void {
-    this.selectedRowKeys = []
+    this.selectedRowKeys.value = []
     if (this._config.rowSelection) {
       this._config.rowSelection.selectedRowKeys = []
     }
@@ -189,11 +181,11 @@ class HiTableConfig implements HiTableInstanceMethods {
 
   // 展开操作方法
   getExpandedRowKeys(): (string | number)[] {
-    return this.expandedRowKeys
+    return this.expandedRowKeys.value
   }
 
   setExpandedRowKeys(rowKeys: (string | number)[]): void {
-    this.expandedRowKeys = rowKeys
+    this.expandedRowKeys.value = rowKeys
     if (this._config.expandable) {
       this._config.expandable.expandedRowKeys = rowKeys
     }
@@ -231,27 +223,39 @@ class HiTableConfig implements HiTableInstanceMethods {
         current: page
       }
     }
+    // 如果是动态数据，重新加载数据
+    if (!this.isStaticData && this.loadDataFunction) {
+      this.loadData()
+    }
   }
 
   setPageSize(pageSize: number): void {
     this.pageSize = pageSize
+    this.currentPage = 1 // 重置到第一页
     if (this._config.pagination !== false) {
       this._config.pagination = {
         ...this._config.pagination,
+        current: 1,
         pageSize: pageSize
       }
+    }
+    // 如果是动态数据，重新加载数据
+    if (!this.isStaticData && this.loadDataFunction) {
+      this.loadData()
     }
   }
 
   // 刷新操作
   refresh(): void {
-    if (this._config.customRequest) {
+    if (this.loadDataFunction || this._config.customRequest) {
       this.reload()
     }
   }
 
   async reload(): Promise<void> {
-    if (this._config.customRequest) {
+    if (this.loadDataFunction) {
+      await this.loadData()
+    } else if (this._config.customRequest) {
       try {
         const params = {
           current: this.currentPage,
@@ -271,6 +275,55 @@ class HiTableConfig implements HiTableInstanceMethods {
         console.error('Table reload failed:', error)
       }
     }
+  }
+
+  // 数据加载方法
+  onLoadData(loadDataFunction: LoadDataFunction): void {
+    this.loadDataFunction = loadDataFunction
+    this.isStaticData = false
+    // 立即加载第一页数据
+    this.loadData()
+  }
+
+  private async loadData(): Promise<void> {
+    if (!this.loadDataFunction) return
+
+    try {
+      // 设置加载状态
+      this._config.loading = true
+
+      const params: LoadDataParams = {
+        page: this.currentPage,
+        pageSize: this.pageSize
+      }
+
+      const response = await this.loadDataFunction(params)
+
+      // 更新数据和分页信息
+      this._data.value = response.list
+      this.total = response.totalCount
+      this.currentPage = response.page
+      this.pageSize = response.pageSize
+
+      // 更新分页配置
+      if (this._config.pagination !== false) {
+        this._config.pagination = {
+          ...this._config.pagination,
+          current: this.currentPage,
+          pageSize: this.pageSize,
+          total: this.total
+        }
+      }
+    } catch (error) {
+      console.error('Load data failed:', error)
+    } finally {
+      // 清除加载状态
+      this._config.loading = false
+    }
+  }
+
+  getTotalCount(): number {
+    return this.total
   }
 
   // 排序和筛选

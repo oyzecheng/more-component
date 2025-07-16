@@ -33,7 +33,7 @@ export interface HiTableGeneralConfigType {
   virtualListProps?: object
 
   // 行配置
-  rowKey?: string | ((record: any) => string)
+  rowKey?: string
   rowClass?: string | ((record: any, rowIndex: number) => string)
 
   // 事件回调
@@ -55,12 +55,6 @@ export interface HiTableGeneralConfigType {
   transformResponse?: (response: any) => { data: any[]; total: number }
 }
 
-// 完整的表格配置（兼容旧版本）
-export interface HiTableConfigType extends HiTableGeneralConfigType {
-  columns: HiTableColumnType[]
-  data?: any[]
-}
-
 // 分离的配置结构
 export interface HiTableSeparatedConfigType {
   columns: HiTableColumnType[]
@@ -70,6 +64,22 @@ export interface HiTableSeparatedConfigType {
 
 export type HiTableDataType = any[]
 
+// 数据加载相关类型定义
+export interface LoadDataParams {
+  page: number
+  pageSize: number
+  [key: string]: any // 支持额外的查询参数
+}
+
+export interface LoadDataResponse {
+  page: number
+  pageSize: number
+  totalCount: number
+  list: any[]
+}
+
+export type LoadDataFunction = (params: LoadDataParams) => Promise<LoadDataResponse>
+
 // 表格实例方法接口
 export interface HiTableInstanceMethods {
   // 数据操作
@@ -78,32 +88,36 @@ export interface HiTableInstanceMethods {
   addRow: (record: any, index?: number) => void
   removeRow: (rowKey: string | number) => void
   updateRow: (rowKey: string | number, record: any) => void
-  
+
   // 选择操作
   getSelectedRowKeys: () => (string | number)[]
   setSelectedRowKeys: (rowKeys: (string | number)[]) => void
   clearSelection: () => void
-  
+
   // 展开操作
   getExpandedRowKeys: () => (string | number)[]
   setExpandedRowKeys: (rowKeys: (string | number)[]) => void
   expandAll: () => void
   collapseAll: () => void
-  
+
   // 分页操作
   getCurrentPage: () => number
   getPageSize: () => number
   setCurrentPage: (page: number) => void
   setPageSize: (pageSize: number) => void
-  
+
   // 刷新操作
   refresh: () => void
   reload: () => void
-  
+
+  // 数据加载
+  onLoadData: (loadDataFunction: LoadDataFunction) => void
+  getTotalCount: () => number
+
   // 排序和筛选
   clearSorter: () => void
   clearFilters: () => void
-  
+
   // 滚动操作
   scrollTo: (options: { top?: number; left?: number; index?: number; key?: string | number }) => void
 }

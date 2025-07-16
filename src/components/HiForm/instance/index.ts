@@ -55,12 +55,20 @@ class HiFormConfig {
     return this._formRef?.value?.validate()
   }
 
-  clearValidate() {
-    return this._formRef?.value?.clearValidate()
+  clearValidate(fields: string | string[]) {
+    return this._formRef?.value?.clearValidate(fields)
   }
 
-  resetFields() {
-    return this._formRef?.value?.resetFields()
+  resetFields(fields: string | string[]) {
+    return this._formRef?.value?.resetFields(fields)
+  }
+
+  validateField(field: string | string[], callback: () => void) {
+    return this._formRef?.value?.validateField(field, callback)
+  }
+
+  setFormData(data: Record<string, any>) {
+    return this._formRef?.value?.setFields(data)
   }
 
   getFormItemInstance(model: string) {
@@ -68,7 +76,7 @@ class HiFormConfig {
     if (!formConfigItem) {
       throw new Error(`model: ${model} is not exist in formConfigList`)
     } else {
-      return new HiFormItemConfig(formConfigItem)
+      return new HiFormItemConfig(formConfigItem, this._formRef)
     }
   }
 }

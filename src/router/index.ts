@@ -4,7 +4,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    redirect: '/sample/pageTable'
+    redirect: '/sample/examplePageTable'
   },
   {
     path: '/sample',
@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
         path: 'pageTable',
         name: 'pageTable',
         component: () => import('@/views/sample/pageTable/index.vue')
+      },
+      {
+        path: 'examplePageTable',
+        name: 'examplePageTable',
+        component: () => import('@/views/sample/pageTable/LoadDataExample.vue')
       }
     ]
   }

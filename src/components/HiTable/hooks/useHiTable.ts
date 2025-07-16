@@ -1,5 +1,4 @@
 import type {
-  HiTableConfigType,
   HiTableGeneralConfigType,
   HiTableSeparatedConfigType
 } from '../types/table'
@@ -7,18 +6,8 @@ import type { HiTableColumnType } from '../types/column'
 import HiTableConfig from '../instance'
 import { reactive } from 'vue'
 
-// 传统方式（向后兼容）
-const useHiTable = (tableConfig: HiTableConfigType) => {
-  const tableInstance = new HiTableConfig(tableConfig)
-
-  return {
-    tableConfig: reactive(tableInstance.getTableConfig()),
-    tableInstance
-  }
-}
-
-// 新的分离配置方式（推荐）
-export const useHiTableSeparated = (
+// 分离配置方式
+const useHiTable = (
   columns: HiTableColumnType[],
   data: any[],
   config: HiTableGeneralConfigType = {}
@@ -38,5 +27,8 @@ export const useHiTableSeparated = (
     tableInstance
   }
 }
+
+// 保持向后兼容的别名
+export const useHiTableSeparated = useHiTable
 
 export default useHiTable

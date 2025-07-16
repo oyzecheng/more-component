@@ -7,7 +7,7 @@ export const RawFormConfigList: HiFormConfigType = reactive([
   { type: 'inputNumber', label: '年龄', model: 'number', placeholder: '输入年龄', allowClear: true },
   { type: 'select', label: '爱好', model: 'select', placeholder: '选择', options: [{ label: '摄影', value: '1' }, { label: '编码', value: '2' }] },
   { type: 'radio', label: '性别', model: 'radio', validate: true, options: [{ label: '男', value: '1' }, { label: '女', value: '2' }], onChange: (value) => { console.log('radio', value) } },
-  { type: 'inputTextarea', label: '多行文本', model: 'textarea', placeholder: '动态显示的多行文本', allowClear: true, showWordLimit: true, maxLength: 100, show: (formData) => formData.radio === 1 },
+  { type: 'inputTextarea', label: '多行文本', model: 'textarea', placeholder: '动态显示的多行文本', allowClear: true, showWordLimit: true, maxLength: 100, show: (formData) => +formData.radio === 1 },
   { type: 'checkbox', label: '复选', model: 'checkbox', options: [{ label: '湘菜', value: '1' }, { label: '粤菜', value: '2' }, { label: '川菜', value: '3' }, { label: '鲁菜', value: '4' }] },
   { type: 'inputTag', label: '标签', model: 'tag', placeholder: '输入标签', allowClear: true },
   { type: 'cascader', label: '地址', model: 'cascader', options: [{ label: '湖南', value: '1', children: [{ label: '长沙', value: '11' }, { label: '株洲', value: '12' }] }, { label: '江西', value: '2', children: [{ label: '南昌', value: '21' }, { label: '萍乡', value: '22' }] }] },

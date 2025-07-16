@@ -36,12 +36,11 @@ export interface HiTableRowSelectionType {
   type?: 'checkbox' | 'radio'
   selectedRowKeys?: (string | number)[]
   checkStrictly?: boolean
-  onlyCheckLeaf?: boolean
-  checkboxProps?: (record: any) => object
-  title?: string | ((checkAll: boolean, indeterminate: boolean) => any)
+  title?: string
   width?: number
   fixed?: boolean
   showCheckedAll?: boolean
+  onlyCurrent?: boolean
 }
 
 export interface HiTableExpandableType {

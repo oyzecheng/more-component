@@ -73,10 +73,10 @@ export const RawTableConfig: HiTableConfigType = reactive({
           { text: '未激活', value: 'inactive' }
         ]
       },
-      render: (record) => {
+      render: ({ record }) => {
         return record.status === 'active' ?
-          h(Tag, { color: 'green' }, '激活') :
-          h(Tag, { color: 'red' }, '未激活')
+          h(Tag, { color: 'green' }, { default: () => '激活' }) :
+          h(Tag, { color: 'red' }, { default: () => '未激活' })
       }
     },
     {
@@ -97,7 +97,9 @@ export const RawTableConfig: HiTableConfigType = reactive({
       dataIndex: 'salary',
       width: 120,
       sortable: true,
-      render: (record) => `¥${record.salary?.toLocaleString()}`
+      render: ({ record }) => {
+        return `¥${record.salary?.toLocaleString()}`
+      }
     },
     {
       title: '创建时间',

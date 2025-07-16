@@ -19,6 +19,8 @@ const tableRef = useTemplateRef('table-ref')
 // 设置table ref到实例中
 tableInstance?._setTableRef(tableRef)
 
+const selectedRowKeys = tableInstance.getSelectedRowKeys()
+
 // 计算分页配置
 const paginationConfig = computed(() => {
   if (tableConfig.pagination === false) {
@@ -28,40 +30,11 @@ const paginationConfig = computed(() => {
   return {
     current: tableInstance?.getCurrentPage() || 1,
     pageSize: tableInstance?.getPageSize() || 10,
-    total: (tableData.value && Array.isArray(tableData.value)) ? tableData.value.length : 0,
+    total: tableInstance?.getTotalCount() || 0,
     showTotal: true,
     showJumper: true,
     showPageSize: true,
     ...tableConfig.pagination
-  }
-})
-
-// 计算行选择配置
-const rowSelectionConfig = computed(() => {
-  if (!tableConfig.rowSelection) {
-    return undefined
-  }
-
-  return {
-    selectedRowKeys: tableInstance?.getSelectedRowKeys() || [],
-    ...tableConfig.rowSelection,
-    onSelect: (rowKeys, rowKey, record) => {
-      tableInstance?.setSelectedRowKeys(rowKeys)
-      tableConfig.onSelect?.(rowKeys, rowKey, record)
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      const newRowKeys = selected ?
-        tableData.value.map(item => {
-          const keyField = tableConfig.rowKey || 'key'
-          return typeof keyField === 'function' ? keyField(item) : item[keyField]
-        }) : []
-      tableInstance?.setSelectedRowKeys(newRowKeys)
-      tableConfig.onSelectAll?.(selected, selectedRows, changeRows)
-    },
-    onChange: (rowKeys) => {
-      tableInstance?.setSelectedRowKeys(rowKeys)
-      tableConfig.onSelectionChange?.(rowKeys)
-    }
   }
 })
 
@@ -88,22 +61,11 @@ const expandableConfig = computed(() => {
 const handlePageChange = (page) => {
   tableInstance?.setCurrentPage(page)
   tableConfig.onPageChange?.(page)
-
-  // 如果有自定义请求，重新加载数据
-  if (tableConfig.customRequest) {
-    tableInstance?.reload()
-  }
 }
 
 const handlePageSizeChange = (pageSize) => {
   tableInstance?.setPageSize(pageSize)
-  tableInstance?.setCurrentPage(1) // 重置到第一页
   tableConfig.onPageSizeChange?.(pageSize)
-
-  // 如果有自定义请求，重新加载数据
-  if (tableConfig.customRequest) {
-    tableInstance?.reload()
-  }
 }
 
 // 排序事件处理
@@ -117,16 +79,12 @@ const handleFilterChange = (dataIndex, filteredValues) => {
 }
 
 // 行点击事件处理
-const handleRowClick = (record, ev) => {
-  tableConfig.onRowClick?.(record, ev)
-}
-
-const handleRowDblclick = (record, ev) => {
-  tableConfig.onRowDblclick?.(record, ev)
-}
-
-const handleRowContextmenu = (record, ev) => {
-  tableConfig.onRowContextmenu?.(record, ev)
+const handleRowClick = (rowKeys, rowKey, record) => {
+  if (selectedRowKeys.value.includes(rowKey)) {
+    tableInstance.removeSelectedRow(rowKey)
+  } else {
+    tableInstance.setSelectedRow(record)
+  }
 }
 
 // 监听实例变化，重新获取配置
@@ -135,6 +93,7 @@ watch(() => props.tableInstance, (newInstance) => {
     Object.assign(tableConfig, newInstance.getConfig())
   }
 }, { immediate: true })
+
 </script>
 
 <template>
@@ -150,19 +109,20 @@ watch(() => props.tableInstance, (newInstance) => {
     :stripe="tableConfig.stripe"
     :show-header="tableConfig.showHeader"
     :pagination="paginationConfig"
-    :row-selection="rowSelectionConfig"
     :expandable="expandableConfig"
     :scroll="tableConfig.scroll"
     :virtual-list-props="tableConfig.virtualListProps"
     :row-key="tableConfig.rowKey"
     :row-class="tableConfig.rowClass"
+
+    :row-selection="tableConfig.rowSelection"
+    :selected-keys="selectedRowKeys"
+
     @page-change="handlePageChange"
     @page-size-change="handlePageSizeChange"
     @sorter-change="handleSorterChange"
     @filter-change="handleFilterChange"
-    @row-click="handleRowClick"
-    @row-dblclick="handleRowDblclick"
-    @row-contextmenu="handleRowContextmenu"
+    @select="handleRowClick"
   >
     <!-- 支持插槽透传 -->
     <template v-for="(_, name) in $slots" #[name]="slotData">
