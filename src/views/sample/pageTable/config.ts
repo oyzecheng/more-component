@@ -23,99 +23,101 @@ const generateMockData = (count: number = 50) => {
   return data
 }
 
-export const RawTableConfig: HiTableConfigType = reactive({
-  columns: [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      width: 80,
-      sortable: true,
-      fixed: 'left'
+export const TableColumns = reactive([
+  {
+    title: 'ID',
+    dataIndex: 'id',
+    width: 80,
+    sortable: true,
+    fixed: 'left'
+  },
+  {
+    title: '姓名',
+    dataIndex: 'name',
+    width: 120,
+    ellipsis: true,
+    tooltip: true
+  },
+  {
+    title: '年龄',
+    dataIndex: 'age',
+    width: 80,
+    sortable: true
+  },
+  {
+    title: '邮箱',
+    dataIndex: 'email',
+    width: 200,
+    ellipsis: true
+  },
+  {
+    title: '手机号',
+    dataIndex: 'phone',
+    width: 140
+  },
+  {
+    title: '地址',
+    dataIndex: 'address',
+    width: 250,
+    ellipsis: true,
+    tooltip: true
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 100,
+    filterable: {
+      filters: [
+        { text: '激活', value: 'active' },
+        { text: '未激活', value: 'inactive' }
+      ]
     },
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      width: 120,
-      ellipsis: true,
-      tooltip: true
-    },
-    {
-      title: '年龄',
-      dataIndex: 'age',
-      width: 80,
-      sortable: true
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
-      width: 200,
-      ellipsis: true
-    },
-    {
-      title: '手机号',
-      dataIndex: 'phone',
-      width: 140
-    },
-    {
-      title: '地址',
-      dataIndex: 'address',
-      width: 250,
-      ellipsis: true,
-      tooltip: true
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      width: 100,
-      filterable: {
-        filters: [
-          { text: '激活', value: 'active' },
-          { text: '未激活', value: 'inactive' }
-        ]
-      },
-      render: ({ record }) => {
-        return record.status === 'active' ?
-          h(Tag, { color: 'green' }, { default: () => '激活' }) :
-          h(Tag, { color: 'red' }, { default: () => '未激活' })
-      }
-    },
-    {
-      title: '部门',
-      dataIndex: 'department',
-      width: 120,
-      filterable: {
-        filters: [
-          { text: '技术部', value: '技术部' },
-          { text: '产品部', value: '产品部' },
-          { text: '运营部', value: '运营部' },
-          { text: '市场部', value: '市场部' }
-        ]
-      }
-    },
-    {
-      title: '薪资',
-      dataIndex: 'salary',
-      width: 120,
-      sortable: true,
-      render: ({ record }) => {
-        return `¥${record.salary?.toLocaleString()}`
-      }
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      width: 120,
-      sortable: true
-    },
-    {
-      title: '操作',
-      dataIndex: 'action',
-      width: 150,
-      fixed: 'right',
-      slotName: 'action'
+    render: ({ record }) => {
+      return record.status === 'active' ?
+        h(Tag, { color: 'green' }, { default: () => '激活' }) :
+        h(Tag, { color: 'red' }, { default: () => '未激活' })
     }
-  ],
-  data: generateMockData(),
+  },
+  {
+    title: '部门',
+    dataIndex: 'department',
+    width: 120,
+    filterable: {
+      filters: [
+        { text: '技术部', value: '技术部' },
+        { text: '产品部', value: '产品部' },
+        { text: '运营部', value: '运营部' },
+        { text: '市场部', value: '市场部' }
+      ]
+    }
+  },
+  {
+    title: '薪资',
+    dataIndex: 'salary',
+    width: 120,
+    sortable: true,
+    render: ({ record }) => {
+      return `¥${record.salary?.toLocaleString()}`
+    }
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createTime',
+    width: 120,
+    sortable: true
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: 150,
+    fixed: 'right',
+    slotName: 'action'
+  }
+])
+
+export const TableData = generateMockData()
+
+export const TableConfig: HiTableConfigType = reactive({
   loading: false,
   size: 'medium',
   bordered: true,

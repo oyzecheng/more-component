@@ -20,15 +20,7 @@ const useHiTable = (
 
   const tableInstance = new HiTableConfig(separatedConfig)
 
-  return {
-    columns: tableInstance.getColumns(),
-    data: tableInstance.getData(),
-    config: reactive(tableInstance.getConfig()),
-    tableInstance
-  }
+  return tableInstance
 }
-
-// 保持向后兼容的别名
-export const useHiTableSeparated = useHiTable
 
 export default useHiTable

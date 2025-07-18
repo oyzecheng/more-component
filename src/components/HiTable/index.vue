@@ -11,8 +11,8 @@ const props = defineProps({
 const { tableInstance } = props
 
 // 使用分离的配置获取方式
-const columns = computed(() => tableInstance?.getColumns() || [])
-const tableData = computed(() => tableInstance?.getData() || [])
+const columns = tableInstance?.getColumns()
+const tableData = tableInstance?.getData()
 const tableConfig = reactive(tableInstance?.getConfig() || {})
 const tableRef = useTemplateRef('table-ref')
 
@@ -86,6 +86,19 @@ const handleRowClick = (rowKeys, rowKey, record) => {
     tableInstance.setSelectedRow(record)
   }
 }
+const handleSelectAll = (checked) => {
+  if (checked) {
+    tableData.value.forEach(item => {
+      if (!tableInstance.hasSelectedRow(item)) {
+        tableInstance.setSelectedRow(item)
+      }
+    })
+  } else {
+    tableData.value.forEach(item => {
+      tableInstance.removeSelectedRow(item)
+    })
+  }
+}
 
 // 监听实例变化，重新获取配置
 watch(() => props.tableInstance, (newInstance) => {
@@ -123,6 +136,7 @@ watch(() => props.tableInstance, (newInstance) => {
     @sorter-change="handleSorterChange"
     @filter-change="handleFilterChange"
     @select="handleRowClick"
+    @select-all="handleSelectAll"
   >
     <!-- 支持插槽透传 -->
     <template v-for="(_, name) in $slots" #[name]="slotData">

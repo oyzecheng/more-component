@@ -77,16 +77,32 @@ class HiTableConfig implements HiTableInstanceMethods {
     return this.selectedRows
   }
 
+  getSelectedRowIndex(row: Record<string, any> | string | number) {
+    const index = this.selectedRows.value.findIndex(item => item === row)
+    if (index > -1) {
+      return index
+    }
+    const i = this.selectedRows.value.findIndex(item => item[this._config.rowKey || 'id'] === row)
+    if (i > -1) {
+      return i
+    }
+    return -1
+  }
+
+  hasSelectedRow(row: Record<string, any> | string | number) {
+    const index = this.getSelectedRowIndex(row)
+    return index > -1
+  }
+
   removeSelectedRow(rowKey: string | number) {
-    const index = this.selectedRows.value.findIndex(item => item === rowKey)
+    const index = this.getSelectedRowIndex(rowKey)
     if (index > -1) {
       return this.selectedRows.value.splice(index, 1)
     }
-    const i = this.selectedRows.value.findIndex(item => item[this._config.rowKey || 'id'] === rowKey)
-    if (i > -1) {
-      return this.selectedRows.value.splice(i, 1)
-    }
-    throw new Error(`removeSelectedRow failed: rowKey not found in selectedRows. rowKey: ${rowKey}`)
+  }
+
+  clearSelectedRows() {
+    this.selectedRows.value.splice(0, this.selectedRows.value.length)
   }
 
   getSelectedRowKeys() {
@@ -102,11 +118,11 @@ class HiTableConfig implements HiTableInstanceMethods {
 
   // 获取配置的方法
   getColumns(): HiTableColumnType[] {
-    return this._columns.value
+    return this._columns
   }
 
   getData(): any[] {
-    return this._data.value
+    return this._data
   }
 
   getConfig(): HiTableGeneralConfigType {
@@ -168,14 +184,6 @@ class HiTableConfig implements HiTableInstanceMethods {
     })
     if (index > -1) {
       this._data.value[index] = { ...this._data.value[index], ...record }
-    }
-  }
-
-
-  clearSelection(): void {
-    this.selectedRowKeys.value = []
-    if (this._config.rowSelection) {
-      this._config.rowSelection.selectedRowKeys = []
     }
   }
 

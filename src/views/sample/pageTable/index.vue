@@ -1,110 +1,40 @@
 <script setup>
 import JsonEditor from 'json-editor-vue'
 import HiTable from '@/components/HiTable/index.vue'
-import { RawTableConfig } from './config'
-import { useHiTableSeparated } from '@/components/HiTable/hooks/useHiTable'
+import { TableConfig, TableData, TableColumns, generateNewData } from './config'
+import useHiTable from '@/components/HiTable/hooks/useHiTable'
 import TableConfigEditor from './components/TableConfigEditor.vue'
 import { tablePresets } from './presets'
-import { ref, reactive, watch, computed } from 'vue'
-import { cloneDeep } from 'lodash-es'
+import {reactive, computed } from 'vue'
 
-// 分离配置：从 RawTableConfig 中提取
-const columns = ref(cloneDeep(RawTableConfig.columns))
-const tableData = ref(cloneDeep(RawTableConfig.data || []))
-
-// 通用配置（排除 columns 和 data）
-const { columns: _, data: __, ...generalConfigData } = RawTableConfig
-const generalConfig = reactive(cloneDeep(generalConfigData))
-
-const selectedRowKeys = ref([])
-
-// 监听选择变化
-const handleSelectionChange = (rowKeys) => {
-  selectedRowKeys.value = rowKeys
-  console.log('选中的行:', rowKeys)
-}
-
-// 设置选择变化回调
-generalConfig.onSelectionChange = handleSelectionChange
+const fullTableConfig = reactive({ tableColumns: TableColumns, tableConfig: TableConfig })
 
 // 使用新的分离配置Hook
-const { tableInstance } = useHiTableSeparated(
-  columns.value,
-  tableData.value,
-  generalConfig
-)
+const tableInstance = computed(() => {
+  return useHiTable(fullTableConfig.tableColumns, TableData, fullTableConfig.tableConfig)
+})
 
-// 创建完整配置的计算属性（用于编辑器显示）
-const fullTableConfig = computed(() => ({
-  columns: columns.value,
-  data: tableData.value,
-  ...generalConfig
-}))
 
-// 处理配置变化
-const handleConfigChange = (content) => {
-  try {
-    const newConfig = typeof content === 'string' ? JSON.parse(content) : content
-
-    // 分离新配置
-    const { columns: newColumns, data: newData, ...newGeneralConfig } = newConfig
-
-    // 更新分离的配置
-    columns.value = newColumns || []
-    tableData.value = newData || []
-
-    // 清空并更新通用配置
-    Object.keys(generalConfig).forEach(key => {
-      delete generalConfig[key]
-    })
-    Object.assign(generalConfig, newGeneralConfig)
-
-    // 保留选择变化回调
-    generalConfig.onSelectionChange = handleSelectionChange
-
-    // 同步到表格实例
-    tableInstance.setColumns(columns.value)
-    tableInstance.setData(tableData.value)
-    tableInstance.setConfig(generalConfig)
-
-    // 同步到原始配置对象（用于编辑器）
-    Object.keys(RawTableConfig).forEach(key => {
-      delete RawTableConfig[key]
-    })
-    Object.assign(RawTableConfig, newConfig)
-
-    // 重置选择状态
-    selectedRowKeys.value = []
-  } catch (err) {
-    console.error('配置解析错误:', err)
-  }
-}
+const selectedRowKeys = tableInstance.value.getSelectedRowKeys()
 
 // 加载预设
 const loadPreset = (presetName) => {
   const preset = tablePresets[presetName]
   if (preset) {
-    handleConfigChange(preset)
+    const { columns, data, ...config } = preset
+    TableColumns.splice(0, TableColumns.length, ...columns)
+    TableData.splice(0, TableData.length, ...data)
+    Object.assign(TableConfig, config)
   }
 }
 
 // 表格操作方法
 const handleRefresh = () => {
-  tableInstance.refresh()
+  tableInstance.value.refresh()
 }
 
 const handleClearSelection = () => {
-  tableInstance.clearSelection()
-  selectedRowKeys.value = []
-}
-
-const handleSelectAll = () => {
-  const allKeys = tableInstance.getData().map(item => {
-    const keyField = tableInstance.getConfig().rowKey || 'key'
-    return typeof keyField === 'function' ? keyField(item) : item[keyField]
-  })
-  tableInstance.setSelectedRowKeys(allKeys)
-  selectedRowKeys.value = allKeys
+  tableInstance.value.clearSelectedRows()
 }
 
 const handleAddRow = () => {
@@ -123,74 +53,60 @@ const handleAddRow = () => {
   }
 
   // 添加到本地数据
-  tableData.value.push(newRow)
+  TableData.push(newRow)
   // 同步到表格实例
-  tableInstance.setData(tableData.value)
+  tableInstance.value.setData(TableData)
 }
 
 const handleRemoveSelected = () => {
   // 从本地数据中删除
   selectedRowKeys.value.forEach(key => {
-    const index = tableData.value.findIndex(item => {
-      const keyField = generalConfig.rowKey || 'key'
+    const index = TableData.findIndex(item => {
+      const keyField = TableConfig.rowKey || 'key'
       return typeof keyField === 'function' ? keyField(item) === key : item[keyField] === key
     })
     if (index > -1) {
-      tableData.value.splice(index, 1)
+      TableData.splice(index, 1)
     }
   })
 
   // 同步到表格实例
-  tableInstance.setData(tableData.value)
-  selectedRowKeys.value = []
+  tableInstance.value.setData(TableData)
+  tableInstance.value.clearSelectedRows()
 }
 
 const handleRemoveRow = (rowKey) => {
   // 从本地数据中删除单行
-  const index = tableData.value.findIndex(item => {
-    const keyField = generalConfig.rowKey || 'key'
+  const index = TableData.findIndex(item => {
+    const keyField = TableConfig.rowKey || 'key'
     return typeof keyField === 'function' ? keyField(item) === rowKey : item[keyField] === rowKey
   })
 
   if (index > -1) {
-    tableData.value.splice(index, 1)
+    TableData.splice(index, 1)
     // 同步到表格实例
-    tableInstance.setData(tableData.value)
+    tableInstance.value.setData(TableData)
 
     // 如果删除的行在选中列表中，也要移除
-    const selectedIndex = selectedRowKeys.value.indexOf(rowKey)
-    if (selectedIndex > -1) {
-      selectedRowKeys.value.splice(selectedIndex, 1)
-    }
+    tableInstance.value.removeSelectedRow(rowKey)
   }
 }
 
-// 监听数据变化，同步到 RawTableConfig
-watch(
-  () => tableData.value,
-  (newData) => {
-    RawTableConfig.data = newData
-  },
-  { deep: true }
-)
+const handleConfigChange = (content) => {
+  try {
+    const newConfig = typeof content === 'string' ? JSON.parse(content) : content
 
-// 监听列配置变化，同步到 RawTableConfig
-watch(
-  () => columns.value,
-  (newColumns) => {
-    RawTableConfig.columns = newColumns
-  },
-  { deep: true }
-)
+    fullTableConfig.tableConfig = newConfig.tableConfig
+    fullTableConfig.tableColumns = newConfig.tableColumns
+  } catch (err) {
+    console.error(err)
+  }
+}
 
-// 监听通用配置变化，同步到 RawTableConfig
-watch(
-  () => generalConfig,
-  (newConfig) => {
-    Object.assign(RawTableConfig, newConfig)
-  },
-  { deep: true }
-)
+const handleUpdateTableData = () => {
+  TableData.splice(0, TableData.length, ...generateNewData())
+  tableInstance.value.setData(TableData)
+}
 </script>
 
 <template>
@@ -204,7 +120,6 @@ watch(
         <div class="flex flex-wrap gap-2 mb-4">
           <a-button @click="handleRefresh">刷新</a-button>
           <a-button @click="handleClearSelection">清空选择</a-button>
-          <a-button @click="handleSelectAll">全选</a-button>
           <a-button @click="handleAddRow">添加行</a-button>
           <a-button
             status="danger"
@@ -252,8 +167,9 @@ watch(
       <a-tabs>
         <a-tab-pane key="1" title="表格配置器">
           <TableConfigEditor
-            :table-config="fullTableConfig"
-            @update:config="handleConfigChange"
+            :table-config="fullTableConfig.tableConfig"
+            :column-config="fullTableConfig.tableColumns"
+            @update:tableData="handleUpdateTableData"
           />
         </a-tab-pane>
         <a-tab-pane key="2" title="表格JSON">
